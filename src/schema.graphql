@@ -1,0 +1,47 @@
+# import UserOrderByInput, PostOrderByInput, CommentOrderByInput from './generated/prisma.graphql'
+
+type Query {
+  users(query: String): [User!]!
+  properties(query: String): [Property!]!
+  search(query: String!): [SearchPayload!]!
+}
+
+type Mutation {
+  createUser(data: CreateUserInput!): User!
+  createProperty(data: CreatePropertyInput!): Property!
+}
+
+type User {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  properties: [Property!]
+}
+
+type Property {
+  id: ID!
+  street: String!
+  city: String!
+  state: String!
+  zip: String!
+  rent: Float
+  owner: User!
+}
+
+type SearchPayload {
+  users: [User!]
+  properties: [Property!]
+}
+
+input CreateUserInput {
+  firstName: String!
+  lastName: String!
+}
+input CreatePropertyInput {
+  street: String!
+  city: String!
+  state: String!
+  zip: String!
+  rent: Float
+  owner: String!
+}

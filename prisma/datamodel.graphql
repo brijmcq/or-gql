@@ -1,0 +1,16 @@
+type User {
+  id: ID! @id
+  firstName: String!
+  lastName: String!
+  properties: [Property!]!
+}
+
+type Property {
+  id: ID! @id
+  street: String!
+  city: String!
+  state: String!
+  zip: String!
+  rent: Float
+  owner: User!
+}
