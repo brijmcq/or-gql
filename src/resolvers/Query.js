@@ -1,38 +1,49 @@
 const Query = {
-  search(parent, { query }, { prisma }, info) {
-    const userArgsObj = {};
+  async search(parent, { query, first }, { prisma }, info) {
+    const userArgsObj = {
+      first
+    };
+
     if (query) {
       userArgsObj.where = {
+        OR: [{ firstName_contains: query }, { lastName_contains: query }]
+      };
+    }
+    const users = await prisma.query.users(userArgsObj);
+
+    const propertyArgsObj = {
+      first
+    };
+    let rentObj;
+    if (!isNaN(parseFloat(query))) {
+      rentObj = { rent: parseFloat(query) };
+    } else {
+      rentObj = {};
+    }
+
+    if (query) {
+      propertyArgsObj.where = {
         OR: [
-          {
-            firstName_contains: query,
-            lastName_contains: query
-          }
+          { street_contains: query },
+          { city_contains: query },
+          { state_contains: query },
+          { zip_contains: query },
+          rentObj
         ]
       };
     }
-    const propertyArgsObj = {};
-    if (query) {
-      propertyArgsObj.where = {
-        OR: [{}]
-      };
-    }
+    const properties = await prisma.query.properties(propertyArgsObj);
+    return { users, properties };
   },
 
-  users(parent, { query }, { prisma }, info) {
+  async users(parent, { query }, { prisma }, info) {
     const argsObj = {};
     if (query) {
       argsObj.where = {
-        OR: [
-          {
-            firstName_contains: query,
-            lastName_contains: query
-          }
-        ]
+        OR: [{ firstName_contains: query }, { lastName_contains: query }]
       };
     }
-
-    return prisma.query.users(null, info);
+    return prisma.query.users(argsObj, info);
   },
   properties(parent, { query }, { prisma }, info) {
     const argsObj = {};

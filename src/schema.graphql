@@ -3,7 +3,7 @@
 type Query {
   users(query: String): [User!]!
   properties(query: String): [Property!]!
-  search(query: String!): [SearchPayload!]!
+  search(query: String!, first: Int): SearchPayload!
 }
 
 type Mutation {
